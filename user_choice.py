@@ -1,26 +1,28 @@
+from logic import TaskManager
+
 def user_choice():
         try:
             usr_select = int(input("Select: "))
             if usr_select in range(1,8):
                 match usr_select:
                       case 1:
-                            pass
+                            TaskManager.add_task()
                       case 2:
-                            pass
+                            TaskManager.remove_task()
                       case 3:
-                            pass
+                            TaskManager.change_status()
                       case 4:
-                            pass
+                            TaskManager.display() # show all tasks
                       case 5:
-                            pass
+                            TaskManager.show_task() # show an specific task
                       case 6:
-                            pass
+                            TaskManager.save() # ToDo: need to save changes in a json file via storage.py module - Add a function for saving
                       case 7:
-                            pass
+                            TaskManager.exit() # ToDo: add a function in storage.py module for asking 'save changes' or 'discard changes'
+                                                # if user choose 'save changes', save function call and run. and if user choose 'discard changes' just break without doing anything
             else:
                 print("Invalid value\n")
                 return False # in 'main.py' module, the while loop will break.
         except ValueError:
                 print("Invalid value\n")
-
-# کل این بخش کد باید حذف شود. زیرا دستور داریم که این کار را با کلاس Task_Manager انجام دهیم.
+                return False  # in 'main.py' module, the while loop will break.

@@ -1,4 +1,5 @@
 import uuid
+from user_choice import user_choice
 
 """
 "We use classes because, for example, when we create an object called 'Language', we can store 
@@ -48,9 +49,6 @@ class Task:
         }
     
 class TaskManager(Task):
-    def check_usr_select(self):
-        pass
-
     def add_task(self):
         pass
 
