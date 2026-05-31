@@ -1,5 +1,7 @@
 import uuid
-from user_choice import user_choice
+from storage import JsonOperation
+from main import task_list
+# from user_choice import user_choice
 
 """
 "We use classes because, for example, when we create an object called 'Language', we can store 
@@ -15,7 +17,7 @@ class Task:
         self.description = description
         self.priority = self.set_priority()
         self.state = "In process"       # for all instances
-        self.info = self.to_dict()
+        self.info = self.to_dict() # returns a dict
 
     def set_priority(self) -> str:
         print("\n--Set priority--\n")
@@ -23,6 +25,10 @@ class Task:
         
         try:
             choice = int(input("Enter your choice: "))
+        except ValueError:
+            print("\nInvalid input\nsetting to Default (3.Low)\n")
+            return "Low"
+        else:
             if choice in (1, 2, 3):
                 match choice:
                     case 1:
@@ -32,11 +38,8 @@ class Task:
                     case 3:
                         return "Low"
             else:
-                print("Out of range! setting to Default (3.Low)")
+                print("\nOut of range! setting to Default (3.Low)\n")
                 return "Low"
-        except ValueError:
-            print("Invalid input\nsetting to Default (3.Low)\n")
-            return "Low"
         
 
     def to_dict(self) -> dict:
@@ -50,22 +53,27 @@ class Task:
     
 class TaskManager(Task):
     def add_task(self):
+        title = input("Title: ")
+        description = input("Description: ")
+        task = Task(title, description)
+        data = task.info
+        task_list.append(data)
+        
+
+    def remove_task(self): # search via uuid
         pass
 
-    def remove_task(self):
+    def change_status(): # from in process to Done
         pass
 
-    def change_status():
+    def display(): # show all tasks
         pass
 
-    def display():
+    def show_task(): # show an specific task:  parameter --> uuid
         pass
 
-    def show_task(): # parameter --> uuid
-        pass
-
-    def save():
+    def save(): # dump in json file
         pass
     
-    def exit():
+    def exit(): # ask for save or discard - save: dump to json file | discard: break 
         pass

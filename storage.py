@@ -1,6 +1,7 @@
 import os
 from tkinter import filedialog
 import json
+# from logic import TaskManager
 
 """
 use graphical inteface for opening and creating. 
@@ -11,23 +12,17 @@ write on json file.
 def check_selection(user_select):
     if user_select in (1, 2):
         match user_select:
-            case 1: # Open existing json file:
-                    selected_path = filedialog.askopenfilename(
+             
+            case 1: # Open existing json file
+                    
+                    selected_file = filedialog.askopenfilename(
                         title="Select an existing file",
-            filetypes=[("JSON files", "*.json")]
+                        filetypes=[("JSON files", "*.json")]
                 )
-                    if selected_path: # selected_path will return True
-                        print(f"\nWorking with existing file: {selected_path}\n")
+                    if selected_file: # selected_path will return True
+                        print(f"\nWorking with existing file: {selected_file}\n")
                         #ToDo: need to read and write on the existing file and save changes in this block
-                        with open(selected_path, "r", encoding="utf-8") as json_file:
-                             data = json.load(json_file) # ToDo: Need to work with data
-                             
-                             '''
-                            این بخش باید چیزی را برگرداند. همچنین توجه داشته باشید که بعد از این بخش باید بخش 
-                            task manager menu اجرا شود
-                            سپس باید data به TaskManager فرستاده شود
-                             '''
-
+                        return selected_file
 
                         #ToDo: need to connect them via object (self) parameter to the class.
                     else:  # when you cancel, will return false. So this block will run.
@@ -36,32 +31,38 @@ def check_selection(user_select):
 
             case 2: # create new json file
                     
-                    selected_path = filedialog.asksaveasfilename(
+                    created_file = filedialog.asksaveasfilename(
                         title="Specify path and name for the new file",
                         defaultextension=".json", # Default extension if user doesn't provide one
                         filetypes=[("JSON files", "*.json")]
                     )
-                    if selected_path: # selected_path will return True
+                    if created_file: # created_file will return True
                         try:
-                            with open(selected_path, "x", encoding="utf-8"):
-                                print(f"\nNew file '{os.path.basename(selected_path)}' created successfully.\n")
+                            with open(created_file, "x", encoding="utf-8"):
+                                pass
                         except FileExistsError:
-                            print(f"\nError: File '{os.path.basename(selected_path)}' already exists!\n")
+                            print(f"\nError: File '{os.path.basename(created_file)}' already exists!\n")
                             return False
+                        else:
+                             print(f"\nNew file '{os.path.basename(created_file)}' created successfully.\n")
+                             return created_file
+                        
                     else:   # when you cancel, will return false. So this block will run.
                         print("\nFile creation canceled.\n")
                         return False
 
     else:
-        print("Invalid value")
+        print("\nInvalid value\n")
         return False
 
 
-print("\n--File--\n")
-print("1. Open existing file\n 2. Create new file\n")
+class JsonOperation:
+     def read_json_file(json_file : str) -> dict : # Read & take information
+        with open(json_file, "r", encoding="utf-8") as file:
+          dict_data = json.load(file)
+          return dict_data
 
-try:
-    user_select = int(input("Select: "))
-    check_selection(user_select)
-except ValueError:
-    print("\nInvalid value\n")
+     def write_json_file(json_file : str) -> str: # write & save - write new json data that has been changed.
+         with open(json_file, "w", encoding="utf-8") as file:
+          dict_data = json.dump(file)
+          return dict_data

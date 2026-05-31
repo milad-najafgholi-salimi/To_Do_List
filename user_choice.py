@@ -1,28 +1,30 @@
 from logic import TaskManager
+from main import task_list
 
 def user_choice():
         try:
-            usr_select = int(input("Select: "))
-            if usr_select in range(1,8):
-                match usr_select:
+            user_select = int(input("Select: "))
+        except ValueError:
+                print("Invalid value\n")
+                return False  # in 'main.py' module, the while loop will break.
+        else:
+              if user_select in range(1,8):
+                match user_select:
                       case 1:
-                            TaskManager.add_task()
+                            TaskManager.add_task(task_list)
                       case 2:
-                            TaskManager.remove_task()
+                            TaskManager.remove_task(task_list)
                       case 3:
-                            TaskManager.change_status()
+                            TaskManager.change_status(task_list)
                       case 4:
-                            TaskManager.display() # show all tasks
+                            TaskManager.display(task_list) # show all tasks
                       case 5:
-                            TaskManager.show_task() # show an specific task
+                            TaskManager.show_task(task_list) # show an specific task
                       case 6:
                             TaskManager.save() # ToDo: need to save changes in a json file via storage.py module - Add a function for saving
                       case 7:
                             TaskManager.exit() # ToDo: add a function in storage.py module for asking 'save changes' or 'discard changes'
                                                 # if user choose 'save changes', save function call and run. and if user choose 'discard changes' just break without doing anything
-            else:
-                print("Invalid value\n")
+              else:
+                print("\nInvalid value\n")
                 return False # in 'main.py' module, the while loop will break.
-        except ValueError:
-                print("Invalid value\n")
-                return False  # in 'main.py' module, the while loop will break.

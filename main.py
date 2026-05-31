@@ -1,9 +1,9 @@
 from user_choice import user_choice
-from logic import Task
-from storage import check_selection
+# from logic import Task
+from storage import check_selection, JsonOperation
 
 
-# task_list = [] 
+task_list = [] 
 # ToDo: work with files that create/exist in 'storage.py' module.
 """this makes a logic error. because remove or don't save changes; 
 Always makes the list empty. It's better first to check if the file is exist or not. and if
@@ -14,17 +14,17 @@ while True:
     print("1. Open existing file\n 2. Create new file\n")
     try:
         user_select = int(input("Select: "))
-        check_selection(user_select)
     except ValueError:
         print("\nInvalid value\n")
+        break
+    else:
+        json_file = check_selection(user_select) # path of json file (include: directory path + file)
+
 
     print("\n--Task Manager Menu--\n")
     print("1. Add task\n2. Remove task\n3. Change status\n4. Display tasks\n5. Display specific task\n6. Save\n7. Exit\n")
     #ToDo: before exiting, show a warning that tells do you want to save before exit? answers should be y or n
-    user_choice.user_choice()
-
-
-    title = input("Title: ")
-    description = input("Description: ")
-    task = Task(title, description)
-    # task_list.append(task.info)
+    
+    dict_data = JsonOperation.read_json_file(json_file)
+    task_list.append(dict_data)
+    user_choice.user_choice(task_list)
