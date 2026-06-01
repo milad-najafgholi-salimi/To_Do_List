@@ -62,7 +62,10 @@ class JsonOperation:
           dict_data = json.load(file)
           return dict_data
 
-     def write_json_file(json_file : str) -> str: # write & save - write new json data that has been changed.
+     def write_json_file(json_file : str) -> str:
+         """
+         write & save - write new json data that has been changed.
+         """
          with open(json_file, "w", encoding="utf-8") as file:
-          dict_data = json.dump(file)
-          return dict_data
+            dict_data = json.dump(file, indent=4)
+            print(dict_data)

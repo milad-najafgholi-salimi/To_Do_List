@@ -1,10 +1,9 @@
-from user_choice import user_choice
+from selection import user_choice
 # from logic import Task
 from storage import check_selection, JsonOperation
 
 
 task_list = [] 
-# ToDo: work with files that create/exist in 'storage.py' module.
 """this makes a logic error. because remove or don't save changes; 
 Always makes the list empty. It's better first to check if the file is exist or not. and if
 it doesn't, create one. then read from there and work with them. this way it's okay."""
@@ -27,4 +26,4 @@ while True:
     
     dict_data = JsonOperation.read_json_file(json_file)
     task_list.append(dict_data)
-    user_choice.user_choice(task_list)
+    user_choice()

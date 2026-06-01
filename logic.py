@@ -1,7 +1,7 @@
 import uuid
-from storage import JsonOperation
+# from storage import JsonOperation
 from main import task_list
-# from user_choice import user_choice
+from selection import task_uuid
 
 """
 "We use classes because, for example, when we create an object called 'Language', we can store 
@@ -12,11 +12,11 @@ This keeps them categorized and well-organized.""
 
 class Task:
     def __init__(self, title: str, description: str):
-        self.uuid = uuid.uuid4()
+        self.uuid = str(uuid.uuid4())
         self.title = title
         self.description = description
         self.priority = self.set_priority()
-        self.state = "In process"       # for all instances
+        self.status = "In process"       # for all instances
         self.info = self.to_dict() # returns a dict
 
     def set_priority(self) -> str:
@@ -48,7 +48,7 @@ class Task:
             "Title": self.title,
             "Description": self.description,
             "Priority": self.priority,
-            "State": self.state
+            "Status": self.status
         }
     
 class TaskManager(Task):
@@ -58,19 +58,41 @@ class TaskManager(Task):
         task = Task(title, description)
         data = task.info
         task_list.append(data)
+        print("New task added successfully.")
         
 
     def remove_task(self): # search via uuid
-        pass
+        """
+        task_uuid function checks every single element in task_list that entered uuid is 
+        the same with that specific uuid or not; 
+        Then returns True or False;
+        """
+        uuid_status, dict_element = task_uuid() 
+        if uuid_status:
+            del dict_element
+            print("\nTask removed.\n")
+        else:
+            print("\nNot found!\n")
 
-    def change_status(): # from in process to Done
-        pass
+    def change_status(): # Changing 'Status' from "In process" to "Done"
+        uuid_status, dict_element = task_uuid()
+        if uuid_status:
+            dict_element["Status"] = "Done"
+            print("\nStatus changed successfully from \"In process\" to \"Done. \"\n")
+        else:
+            print("\nNot found!\n")  
+
+    def show_task(): # show an specific task via uuid
+        uuid_status, dict_element = task_uuid()
+        if uuid_status:
+            print("\n" + dict_element + "\n")
+        else:
+            print("\nNot found!\n")
 
     def display(): # show all tasks
-        pass
-
-    def show_task(): # show an specific task:  parameter --> uuid
-        pass
+        for element in task_list:
+            print(element + "\n")
+        print("\n Done!")
 
     def save(): # dump in json file
         pass
