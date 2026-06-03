@@ -1,6 +1,6 @@
 import uuid
-# from storage import JsonOperation
-from main import task_list
+from storage import JsonOperation
+from main import task_list, json_file
 from selection import task_uuid
 
 """
@@ -95,7 +95,8 @@ class TaskManager(Task):
         print("\n Done!")
 
     def save(): # dump in json file
-        pass
+        JsonOperation.write_json_file(json_file, task_list)
+        print("\nSaved successfully.")
     
-    def exit(): # ask for save or discard - save: dump to json file | discard: break 
-        pass
+    def exit():
+        return False

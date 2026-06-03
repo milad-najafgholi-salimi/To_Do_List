@@ -21,10 +21,9 @@ def user_choice():
                       case 5:
                             TaskManager.show_task() # show an specific task
                       case 6:
-                            TaskManager.save() # ToDo: need to save changes in a json file via storage.py module - Add a function for saving
+                            TaskManager.save()
                       case 7:
-                            TaskManager.exit() # ToDo: add a function in storage.py module for asking 'save changes' or 'discard changes'
-                                                # if user choose 'save changes', save function call and run. and if user choose 'discard changes' just break without doing anything
+                            TaskManager.exit()  
               else:
                 print("\nInvalid value\n")
                 return False # in 'main.py' module, the while loop will break.

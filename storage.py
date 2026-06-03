@@ -21,10 +21,8 @@ def check_selection(user_select):
                 )
                     if selected_file: # selected_path will return True
                         print(f"\nWorking with existing file: {selected_file}\n")
-                        #ToDo: need to read and write on the existing file and save changes in this block
                         return selected_file
 
-                        #ToDo: need to connect them via object (self) parameter to the class.
                     else:  # when you cancel, will return false. So this block will run.
                         print("\nFile selection cancelled!\n")
                         return False
@@ -62,10 +60,10 @@ class JsonOperation:
           dict_data = json.load(file)
           return dict_data
 
-     def write_json_file(json_file : str) -> str:
+     def write_json_file(json_file : str, task_list : list) -> str:
          """
-         write & save - write new json data that has been changed.
+         write & save - write new json data that has been change.
          """
          with open(json_file, "w", encoding="utf-8") as file:
-            dict_data = json.dump(file, indent=4)
+            dict_data = json.dump(task_list, file, indent=4)
             print(dict_data)

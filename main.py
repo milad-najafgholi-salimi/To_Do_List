@@ -1,5 +1,4 @@
 from selection import user_choice
-# from logic import Task
 from storage import check_selection, JsonOperation
 
 
@@ -18,7 +17,7 @@ while True:
         break
     else:
         json_file = check_selection(user_select) # path of json file (include: directory path + file)
-
+        # ToDo: need to use a for loop for saving all data in task_list?
 
     print("\n--Task Manager Menu--\n")
     print("1. Add task\n2. Remove task\n3. Change status\n4. Display tasks\n5. Display specific task\n6. Save\n7. Exit\n")
