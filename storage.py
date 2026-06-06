@@ -1,7 +1,6 @@
 import os
 from tkinter import filedialog
 import json
-# from logic import TaskManager
 
 """
 use graphical inteface for opening and creating. 
@@ -10,7 +9,7 @@ write on json file.
 """
 
 def check_selection(user_select):
-    if user_select in (1, 2):
+    if user_select in (1, 2, 3):
         match user_select:
              
             case 1: # Open existing json file
@@ -36,8 +35,8 @@ def check_selection(user_select):
                     )
                     if created_file: # created_file will return True
                         try:
-                            with open(created_file, "x", encoding="utf-8"):
-                                pass
+                            with open(created_file, "x", encoding="utf-8") as file:
+                                json.dump([], file, indent=4)
                         except FileExistsError:
                             print(f"\nError: File '{os.path.basename(created_file)}' already exists!\n")
                             return False
@@ -48,6 +47,10 @@ def check_selection(user_select):
                     else:   # when you cancel, will return false. So this block will run.
                         print("\nFile creation canceled.\n")
                         return False
+            
+            case 3: # Quit and close program completely
+                print("\n--Goodbye--\n")
+                return False
 
     else:
         print("\nInvalid value\n")
@@ -55,10 +58,15 @@ def check_selection(user_select):
 
 
 class JsonOperation:
-     def read_json_file(json_file : str) -> dict : # Read & take information
-        with open(json_file, "r", encoding="utf-8") as file:
-          dict_data = json.load(file)
-          return dict_data
+     def read_json_file(json_file : str) : # Read & take information
+        try:
+            with open(json_file, "r", encoding="utf-8") as file:
+                if os.path.getsize(json_file) == 0:
+                    return []
+                dict_data = json.load(file)
+                return dict_data
+        except json.JSONDecodeError:
+            return []
 
      def write_json_file(json_file : str, task_list : list) -> str:
          """
@@ -67,3 +75,15 @@ class JsonOperation:
          with open(json_file, "w", encoding="utf-8") as file:
             dict_data = json.dump(task_list, file, indent=4)
             print(dict_data)
+
+
+"""
+ToDo: 
+در ماژول استورج وقتی کاربر فایل جدید می‌سازد باید همان فایل بعنوان 
+open existing file 
+انتخاب شود و روی آن کار کند تا دوباره منوی اصلی نشان داده نشود
+یا آنکه پس از ساخت فایل جدید دوباره فایل ساخته شده را انتخاب کنیم بدون اینکه وارد منوی 
+Task manager 
+شود
+نظر من استفاده از روش دوم است
+"""

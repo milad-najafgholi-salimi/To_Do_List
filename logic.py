@@ -1,7 +1,7 @@
 import uuid
 from storage import JsonOperation
-from main import task_list, json_file
-from selection import task_uuid
+from common import task_list, json_file, task_uuid
+# from select import task_uuid
 
 """
 "We use classes because, for example, when we create an object called 'Language', we can store 
@@ -52,6 +52,11 @@ class Task:
         }
     
 class TaskManager(Task):
+    """
+    To avoid "missing 1 required positional argument: 'self'" make 
+    'add_task' method to a static method; We don't need an instance 
+    so it's not necessary to be a class's method.
+    """
     def add_task(self):
         title = input("Title: ")
         description = input("Description: ")
@@ -69,7 +74,7 @@ class TaskManager(Task):
         """
         uuid_status, dict_element = task_uuid() 
         if uuid_status:
-            del dict_element
+            task_list.remove(dict_element)
             print("\nTask removed.\n")
         else:
             print("\nNot found!\n")
@@ -85,13 +90,13 @@ class TaskManager(Task):
     def show_task(): # show an specific task via uuid
         uuid_status, dict_element = task_uuid()
         if uuid_status:
-            print("\n" + dict_element + "\n")
+            print(f"\n{dict_element}\n")
         else:
             print("\nNot found!\n")
 
     def display(): # show all tasks
         for element in task_list:
-            print(element + "\n")
+            print(f"{element}\n")
         print("\n Done!")
 
     def save(): # dump in json file
