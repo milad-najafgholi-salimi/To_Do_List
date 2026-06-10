@@ -1,30 +1,69 @@
-from common import task_list, json_file
-from storage import check_selection, JsonOperation
-from selection import user_choice
+from storage import check_selection, read_json_file
+from logic import TaskManager
+
+task_list = []
 
 while True:
     print("\n --Main Menu--\n")
-    print("1. Open existing file\n2. Create new file\n3. Quit\n")
+    print("1. Open existing file\n")
+    print("2. Create new file\n")
+    print("3. Quit\n")
+
     try:
         user_select = int(input("Select: "))
     except ValueError:
         print("\nInvalid value\n")
-        break
-    else:
-        json_file = check_selection(user_select) # path of json file (include: directory path + file)
+        continue
     
-    if json_file != False and user_select == 1:
+    json_file = check_selection(user_select) # json_file: directory/file.json
+
+    if json_file is False:
+        if user_select == 3:
+            print("\n--Goodbye--\n")
+        break
+
+    if user_select == 1 or user_select == 2:
+        # Load existing data if file exists and has content
+        dict_data = read_json_file(json_file)
+        if dict_data:
+            task_list.extend(dict_data)
+
+        # Create TaskManager instance with the task_list
+        manager = TaskManager(task_list)
+        
+        # Task Manager Menu Loop
         while True:
             print("\n--Task Manager Menu--\n")
-            print("1. Add task\n2. Remove task\n3. Change status\n4. Display tasks\n5. Display specific task\n6. Save\n7. Exit\n")
-
-            dict_data = JsonOperation.read_json_file(json_file)
-            """
-            To avoid appending a list into a list (nested list), use extend method.
-            This way, the output will be just a list with elements inside it.
-            """
-            task_list.extend(dict_data)
-            user_choice()
-
-    elif json_file == False:
-        break
+            print("1. Add task\n")
+            print("2. Remove task\n")
+            print("3. Change status\n")
+            print("4. Display tasks\n")
+            print("5. Display specific task\n")
+            print("6. Save\n")
+            print("7. Exit\n")
+            
+            try:
+                user_choice = int(input("Select: "))
+            except ValueError:
+                print("\nInvalid value\n")
+                continue
+            
+            if user_choice == 1:
+                manager.add_task()
+            elif user_choice == 2:
+                manager.remove_task()
+            elif user_choice == 3:
+                manager.change_status()
+            elif user_choice == 4:
+                manager.display()
+            elif user_choice == 5:
+                manager.show_task()
+            elif user_choice == 6:
+                manager.save(json_file)
+            elif user_choice == 7:
+                manager.exit(json_file)
+                break
+            else:
+                print("\nInvalid value\n")
+            
+            # Also can be written in match statement

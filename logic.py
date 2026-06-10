@@ -1,23 +1,17 @@
 import uuid
-from storage import JsonOperation
-from common import task_list, json_file, task_uuid
-# from select import task_uuid
-
-"""
-"We use classes because, for example, when we create an object called 'Language', we can store 
-tasks for English, French, and Persian that need to be completed. We assign each task a title, 
-description, and priority. 
-This keeps them categorized and well-organized.""
-"""
+from storage import write_json_file
 
 class Task:
-    def __init__(self, title: str, description: str):
-        self.uuid = str(uuid.uuid4())
-        self.title = title
-        self.description = description
-        self.priority = self.set_priority()
+    def __init__(self):
+        self.uuid = None 
+        self.title = None
+        self.description = None
+        self.priority = None
         self.status = "In process"       # for all instances
-        self.info = self.to_dict() # returns a dict
+        self.dict = None # returns a dict
+
+    def set_uuid(self):
+        return str(uuid.uuid4())
 
     def set_priority(self) -> str:
         print("\n--Set priority--\n")
@@ -50,20 +44,32 @@ class Task:
             "Priority": self.priority,
             "Status": self.status
         }
+
+class TaskManager:
+    def __init__(self, task_list):
+        self.task_list = task_list
     
-class TaskManager(Task):
-    """
-    To avoid "missing 1 required positional argument: 'self'" make 
-    'add_task' method to a static method; We don't need an instance 
-    so it's not necessary to be a class's method.
-    """
+    @staticmethod
+    def task_uuid(task_list):
+        """
+        Checks if a specific uuid exists in the task_list
+        Returns: (bool, dict_element)
+        """
+        input_uuid = input("\nEnter UUID: ")
+        for dict_element in task_list:
+            if dict_element["UUID"] == input_uuid:
+                return True, dict_element
+        return False, None
+
     def add_task(self):
-        title = input("Title: ")
-        description = input("Description: ")
-        task = Task(title, description)
-        data = task.info
-        task_list.append(data)
-        print("New task added successfully.")
+        task = Task()
+        task.uuid = task.set_uuid()
+        task.title = input("\nTitle:")
+        task.description = input("\nDescription: ")
+        task.priority = task.set_priority()
+        task.dict = task.to_dict() # return a dictionary
+        self.task_list.append(task.dict)
+        print("\nNew task added successfully.")
         
 
     def remove_task(self): # search via uuid
@@ -72,36 +78,41 @@ class TaskManager(Task):
         the same with that specific uuid or not; 
         Then returns True or False;
         """
-        uuid_status, dict_element = task_uuid() 
+        uuid_status, dict_element = self.task_uuid(self.task_list) 
         if uuid_status:
-            task_list.remove(dict_element)
+            self.task_list.remove(dict_element)
             print("\nTask removed.\n")
         else:
             print("\nNot found!\n")
 
-    def change_status(): # Changing 'Status' from "In process" to "Done"
-        uuid_status, dict_element = task_uuid()
+    def change_status(self): # Changing 'Status' from "In process" to "Done"
+        uuid_status, dict_element = self.task_uuid(self.task_list)
         if uuid_status:
             dict_element["Status"] = "Done"
             print("\nStatus changed successfully from \"In process\" to \"Done. \"\n")
         else:
             print("\nNot found!\n")  
 
-    def show_task(): # show an specific task via uuid
-        uuid_status, dict_element = task_uuid()
+    def show_task(self): # show an specific task via uuid
+        uuid_status, dict_element = self.task_uuid(self.task_list)
         if uuid_status:
             print(f"\n{dict_element}\n")
         else:
             print("\nNot found!\n")
 
-    def display(): # show all tasks
-        for element in task_list:
-            print(f"{element}\n")
-        print("\n Done!")
+    def display(self): # show all tasks
+        if not self.task_list: # check is empty
+            print("\nNo tasks available. \n")
+        else:
+            for element in self.task_list:
+                print(f"{element}\n")
+            print("\n-- End of tasks --")
 
-    def save(): # dump in json file
-        JsonOperation.write_json_file(json_file, task_list)
-        print("\nSaved successfully.")
+    def save(self, json_file): # dump in json file
+        write_json_file(json_file, self.task_list)
+        print("\nSaved successfully.\n")
     
-    def exit():
-        return False
+    def exit(self, json_file):
+        print("automatically saving...")
+        self.save(json_file)
+        print("Exit now.\n")
