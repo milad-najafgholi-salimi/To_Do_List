@@ -40,7 +40,7 @@ while True:
             print("4. Display tasks\n")
             print("5. Display specific task\n")
             print("6. Save\n")
-            print("7. Exit\n")
+            print("7. Save & Exit\n")
             
             try:
                 user_choice = int(input("Select: "))

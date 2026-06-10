@@ -1,99 +1,56 @@
 ```mermaid
-
 flowchart LR
-    A([Start]) --> B[/Import modules/]
-    B --> C{While True<br>Main Menu}
+    Start([Start]) --> MainMenu{Main Menu}
     
-    C --> D[/Display Main Menu/]
-    D --> E[/Get user_select/]
-    E --> F{Valid integer?}
-    F -->|No| G[/Print Invalid value/]
-    G --> Z([End])
+    MainMenu --> |User selects 1| OpenFile[Open existing file via dialog]
+    MainMenu --> |User selects 2| CreateFile[Create new file via dialog]
+    MainMenu --> |User selects 3| Quit([Quit Program])
     
-    F -->|Yes| H{user_select?}
+    OpenFile --> CheckFile1{File selected?}
+    CreateFile --> CheckFile2{File created?}
     
-    H -->|1 or 2| I[check_selection]
-    H -->|3| J[/Print Goodbye/]
-    J --> Z
+    CheckFile1 --> |No| MainMenu
+    CheckFile1 --> |Yes| ReadJSON[Read JSON file]
     
-    I --> K{user_select == 1?}
-    K -->|Yes - Open file| L[/filedialog.askopenfilename/]
-    K -->|No - Create file| M[/filedialog.asksaveasfilename/]
+    CheckFile2 --> |No| MainMenu
+    CheckFile2 --> |Yes| ReadJSON
     
-    L --> N{File selected?}
-    N -->|No| O[/Print Cancelled/]
-    O --> Z
-    N -->|Yes| P[Return file path]
+    ReadJSON --> LoadData[Load existing tasks into task_list]
+    LoadData --> TaskManagerMenu
     
-    M --> Q{File created?}
-    Q -->|No| R[/Print Cancelled/]
-    R --> Z
-    Q -->|Yes| S[Create empty JSON file]
-    S --> T[Return file path]
+    TaskManagerMenu[Task Manager Menu] --> TMMenu{User Choice}
     
-    P --> U[json_file = file path]
-    T --> U
+    TMMenu --> |1| AddTask[Add Task]
+    TMMenu --> |2| RemoveTask[Remove Task]
+    TMMenu --> |3| ChangeStatus[Change Status]
+    TMMenu --> |4| DisplayAll[Display All Tasks]
+    TMMenu --> |5| DisplaySpecific[Display Specific Task]
+    TMMenu --> |6| Save[Save to JSON]
+    TMMenu --> |7| Exit[Exit & Auto-save]
     
-    U --> V{json_file and user_select==1?}
-    V -->|No| Z
-    V -->|Yes| W{While True<br>Task Menu}
+    AddTask --> AddStep1[Generate UUID]
+    AddStep1 --> AddStep2[Input Title]
+    AddStep2 --> AddStep3[Input Description]
+    AddStep3 --> AddStep4[Set Priority]
+    AddStep4 --> AddStep5[Convert to dict]
+    AddStep5 --> AddStep6[Append to task_list]
+    AddStep6 --> TaskManagerMenu
     
-    W --> X[/Display Task Menu/]
-    X --> Y[read_json_file]
-    Y --> AA[task_list.extend]
-    AA --> AB[user_choice]
+    RemoveTask --> RemoveStep1[Enter UUID]
+    RemoveStep1 --> RemoveStep2{UUID found?}
+    RemoveStep2 --> |Yes| RemoveStep3[Remove task from list]
+    RemoveStep2 --> |No| RemoveError[Show Not Found]
+    RemoveStep3 --> TaskManagerMenu
+    RemoveError --> TaskManagerMenu
     
-    AB --> AC{Valid integer<br>1-7?}
-    AC -->|No| AD[/Print Invalid/]
-    AD --> W
+    ChangeStatus --> StatusStep1[Enter UUID]
+    StatusStep1 --> StatusStep2{UUID found?}
+    StatusStep2 --> |Yes| StatusStep3[Set Status to 'Done']
+    StatusStep2 --> |No| StatusError[Show Not Found]
+    StatusStep3 --> TaskManagerMenu
+    StatusError --> TaskManagerMenu
     
-    AC -->|Yes| AE{match user_select}
-    
-    AE -->|1| AF[add_task]
-    AE -->|2| AG[remove_task]
-    AE -->|3| AH[change_status]
-    AE -->|4| AI[display]
-    AE -->|5| AJ[show_task]
-    AE -->|6| AK[save]
-    AE -->|7| AL[exit]
-    
-    AF --> AM[Get title & description]
-    AM --> AN[Create Task object]
-    AN --> AO[Generate UUID]
-    AO --> AP[Set priority]
-    AP --> AQ[Create task dict]
-    AQ --> AR[Append to task_list]
-    AR --> W
-    
-    AG --> AS[task_uuid]
-    AS --> AT{Found?}
-    AT -->|Yes| AU[Remove from task_list]
-    AU --> W
-    AT -->|No| AV[Print Not found]
-    AV --> W
-    
-    AH --> AW[task_uuid]
-    AW --> AX{Found?}
-    AX -->|Yes| AY[Set Status to Done]
-    AY --> W
-    AX -->|No| AZ[Print Not found]
-    AZ --> W
-    
-    AI --> BA[Print all tasks]
-    BA --> W
-    
-    AJ --> BB[task_uuid]
-    BB --> BC{Found?}
-    BC -->|Yes| BD[Print specific task]
-    BD --> W
-    BC -->|No| BE[Print Not found]
-    BE --> W
-    
-    AK --> BF[write_json_file]
-    BF --> BG[Save to file]
-    BG --> W
-    
-    AL --> BH[Return False]
-    BH --> Z
-    
-    Z([End])
+    DisplayAll --> DisplayStep1{task_list empty?}
+    DisplayStep1 --> |Yes| DisplayEmpty[Show 'No tasks available']
+    DisplayStep1 --> |No| DisplayLoop[Loop through and print each task]
+   
