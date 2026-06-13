@@ -37,10 +37,11 @@ while True:
             print("1. Add task\n")
             print("2. Remove task\n")
             print("3. Change status\n")
-            print("4. Display tasks\n")
-            print("5. Display specific task\n")
-            print("6. Save\n")
-            print("7. Save & Exit\n")
+            print("4. Change priority\n")
+            print("5. Display tasks\n")
+            print("6. Display specific task\n")
+            print("7. Save\n")
+            print("8. Save & Exit\n")
             
             try:
                 user_choice = int(input("Select: "))
@@ -50,19 +51,47 @@ while True:
             
             if user_choice == 1:
                 manager.add_task()
+
             elif user_choice == 2:
                 manager.remove_task()
+
             elif user_choice == 3:
                 manager.change_status()
+
             elif user_choice == 4:
-                manager.display()
+                pass
+
             elif user_choice == 5:
-                manager.show_task()
+                print("\n-- Display Tasks --\n")
+                print("1. All")
+                print("2. Only \"Done\"")
+                print("3. Only \"In process\"")
+                print("4. Sort by priority from High to Low\n")
+                try:
+                    select = int(input("Select: "))
+                except ValueError:
+                    print("\nInvalid value\n")
+                    continue
+                match select:
+                    case 1:
+                        manager.display()
+                    case 2:
+                        manager.display_only_Done()
+                    case 3:
+                        manager.display_only_in_process()
+                    case 4:
+                        manager.sort_by_priority_and_display()
+
             elif user_choice == 6:
-                manager.save(json_file)
+                manager.show_task()
+
             elif user_choice == 7:
+                manager.save(json_file)
+
+            elif user_choice == 8:
                 manager.exit(json_file)
                 break
+
             else:
                 print("\nInvalid value\n")
             

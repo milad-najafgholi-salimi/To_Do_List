@@ -93,6 +93,15 @@ class TaskManager:
         else:
             print("\nNot found!\n")  
 
+    def change_priority(self):
+        task_uuid = input("Enter task uuid: ")
+        for task in self.task_list:
+            if self.task_uuid["UUID"] == task_uuid:
+                task = Task()
+                pass # My brain doesn't work. I can't think right now. I have problems and my thoughts are like storm.
+        else:
+            print("\nInvalid UUID.")
+
     def show_task(self): # show an specific task via uuid
         uuid_status, dict_element = self.task_uuid(self.task_list)
         if uuid_status:
@@ -107,6 +116,40 @@ class TaskManager:
             for element in self.task_list:
                 print(f"{element}\n")
             print("\n-- End of tasks --")
+
+    def display_only_Done(self):
+        done_list = []
+        for task in self.task_list:
+            if task["Status"] == "Done":
+                done_list.append(task)
+        for task in done_list:
+            print(task, "\n")
+
+    def display_only_in_process(self):
+        in_process_list = []
+        for task in self.task_list:
+            if task["Status"] == "In process":
+                in_process_list.append(task)
+        for task in in_process_list:
+            print(task, "\n")
+
+    def sort_by_priority_and_display(self):
+        sort_list = []
+        high_list = []
+        medium_list = []
+        low_list = []
+        for task in self.task_list:
+            if task["Priority"] == "High":
+                high_list.append(task)
+            elif task["Priority"] == "Medium":
+                medium_list.append(task)
+            elif task["Priority"] == "Low":
+                low_list.append(task)
+        sort_list.extend(high_list)
+        sort_list.extend(medium_list)
+        sort_list.extend(low_list)
+        for task in sort_list:
+            print(task)
 
     def save(self, json_file): # dump in json file
         write_json_file(json_file, self.task_list)
