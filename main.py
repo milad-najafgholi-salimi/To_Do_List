@@ -90,7 +90,6 @@ while True:
 
             elif user_choice == 8:
                 manager.exit(json_file)
-                break
 
             else:
                 print("\nInvalid value\n")

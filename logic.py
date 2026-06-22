@@ -158,6 +158,21 @@ class TaskManager:
         print("\nSaved successfully.\n")
     
     def exit(self, json_file):
-        print("automatically saving...")
-        self.save(json_file)
-        print("Exit now.\n")
+        print("\n1. Save changes\n")
+        print("2. Discard Changes")
+        try:
+            user_select = int(input("Select: "))
+        except ValueError:
+            print("\nInvalid Value\n")
+        else:
+            if user_select == 1:
+                print("Saving changes...")
+                self.save(json_file)
+                return False
+                
+            elif user_select == 2:
+                print("Exit 'WITHOUT' saving changes\n")
+                return False
+
+            else:
+                print("\nInvalid Value\n")
