@@ -94,13 +94,13 @@ class TaskManager:
             print("\nNot found!\n")  
 
     def change_priority(self):
-        task_uuid = input("Enter task uuid: ")
-        for task in self.task_list:
-            if self.task_uuid["UUID"] == task_uuid:
-                task = Task()
-                pass # My brain doesn't work. I can't think right now. I have problems and my thoughts are like storm.
+        uuid_status, dict_element = self.task_uuid(self.task_list)
+        if uuid_status:
+            task = Task()
+            dict_element["Priority"] = task.set_priority()
+            print("\n'Priority' changed successfully!\n")
         else:
-            print("\nInvalid UUID.")
+            print("\nNot found!\n")
 
     def show_task(self): # show an specific task via uuid
         uuid_status, dict_element = self.task_uuid(self.task_list)

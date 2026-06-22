@@ -59,7 +59,7 @@ while True:
                 manager.change_status()
 
             elif user_choice == 4:
-                pass
+                manager.change_priority()
 
             elif user_choice == 5:
                 print("\n-- Display Tasks --\n")
