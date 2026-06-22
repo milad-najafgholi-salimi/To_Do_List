@@ -79,6 +79,8 @@ while True:
                         manager.display_only_Not_Done()
                     case 4:
                         manager.sort_by_priority_and_display(json_file)
+                    case _:
+                        print("\nInvalid Value!\n")
 
             elif user_choice == 6:
                 manager.show_task()
