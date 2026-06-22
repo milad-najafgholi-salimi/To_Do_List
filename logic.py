@@ -134,7 +134,7 @@ class TaskManager:
         for task in Not_Done_list:
             print(task, "\n")
 
-    def sort_by_priority_and_display(self):
+    def sort_by_priority_and_display(self, json_file):
         sort_list = []
         high_list = []
         medium_list = []
@@ -150,8 +150,9 @@ class TaskManager:
         sort_list.extend(medium_list)
         sort_list.extend(low_list)
         for task in sort_list:
-            print(task)
+            print(task,"\n")
         self.task_list = sort_list
+        self.save(json_file)
 
     def save(self, json_file): # dump in json file
         write_json_file(json_file, self.task_list)
@@ -159,7 +160,7 @@ class TaskManager:
     
     def exit(self, json_file):
         print("\n1. Save changes\n")
-        print("2. Discard Changes")
+        print("2. Discard Changes\n")
         try:
             user_select = int(input("Select: "))
         except ValueError:

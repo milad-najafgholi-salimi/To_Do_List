@@ -17,12 +17,10 @@ while True:
     
     json_file = check_selection(user_select) # json_file: directory/file.json
 
-    if json_file is False:
-        if user_select == 3:
-            print("\n--Goodbye--\n")
+    if json_file == False or json_file == 3:
         break
 
-    if user_select == 1 or user_select == 2:
+    elif user_select == 1 or user_select == 2:
         # Load existing data if file exists and has content
         dict_data = read_json_file(json_file)
         if dict_data:
@@ -80,7 +78,7 @@ while True:
                     case 3:
                         manager.display_only_Not_Done()
                     case 4:
-                        manager.sort_by_priority_and_display()
+                        manager.sort_by_priority_and_display(json_file)
 
             elif user_choice == 6:
                 manager.show_task()
@@ -89,7 +87,11 @@ while True:
                 manager.save(json_file)
 
             elif user_choice == 8:
-                manager.exit(json_file)
+                result = manager.exit(json_file)
+                if result == False:
+                    break
 
             else:
                 print("\nInvalid value\n")
+    else:
+        print("\nInvalid value\n")
