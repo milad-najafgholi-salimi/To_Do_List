@@ -1,0 +1,13 @@
+## About This Project
+
+This is a personal project I built out of both genuine need and a desire to sharpen my own skills. I asked an AI to design an intermediate-to-advanced ToDo List project for me — only the text-based requirements/specs, without ever seeing any actual code — which I then implemented entirely on my own from scratch. It was fun, useful, and a great opportunity to thoroughly review Python concepts and deepen my understanding.
+
+It's a CLI (Command Line Interface) project — simple and straightforward to use, run entirely from the command line. (That said, it's still a work in progress.)
+
+I had particularly struggled with Object-Oriented Programming (OOP), and working through this project helped me understand it much better — it played a real role in turning me into an actual programmer.
+
+Since I personally rely on this project and consider it an important, expandable one, I plan to keep improving it and adding new features over time.
+
+Feel free to use this project freely and for free. If you spot any issues or have suggestions, I'd love to hear them so we can improve it together.
+
+Thanks!
