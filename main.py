@@ -65,7 +65,7 @@ while True:
                 print("\n-- Display Tasks --\n")
                 print("1. All")
                 print("2. Only \"Done\"")
-                print("3. Only \"In process\"")
+                print("3. Only \"Not Done\"")
                 print("4. Sort by priority from High to Low\n")
                 try:
                     select = int(input("Select: "))
@@ -78,7 +78,7 @@ while True:
                     case 2:
                         manager.display_only_Done()
                     case 3:
-                        manager.display_only_in_process()
+                        manager.display_only_Not_Done()
                     case 4:
                         manager.sort_by_priority_and_display()
 
@@ -94,5 +94,3 @@ while True:
 
             else:
                 print("\nInvalid value\n")
-            
-            # Also can be written in match statement

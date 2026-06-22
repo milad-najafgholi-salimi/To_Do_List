@@ -88,8 +88,9 @@ class TaskManager:
     def change_status(self): # Changing 'Status' from "In process" to "Done"
         uuid_status, dict_element = self.task_uuid(self.task_list)
         if uuid_status:
-            dict_element["Status"] = "Done"
-            print("\nStatus changed successfully from \"In process\" to \"Done. \"\n")
+            input_user_status = input("\nEnter status: ")
+            dict_element["Status"] = input_user_status
+            print(f"\nStatus changed successfully to \"{input_user_status}\".\n")
         else:
             print("\nNot found!\n")  
 
@@ -125,12 +126,12 @@ class TaskManager:
         for task in done_list:
             print(task, "\n")
 
-    def display_only_in_process(self):
-        in_process_list = []
+    def display_only_Not_Done(self):
+        Not_Done_list = []
         for task in self.task_list:
-            if task["Status"] == "In process":
-                in_process_list.append(task)
-        for task in in_process_list:
+            if task["Status"] != "Done":
+                Not_Done_list.append(task)
+        for task in Not_Done_list:
             print(task, "\n")
 
     def sort_by_priority_and_display(self):
@@ -150,6 +151,7 @@ class TaskManager:
         sort_list.extend(low_list)
         for task in sort_list:
             print(task)
+        self.task_list = sort_list
 
     def save(self, json_file): # dump in json file
         write_json_file(json_file, self.task_list)
