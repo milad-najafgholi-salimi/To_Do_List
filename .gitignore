@@ -1,2 +1,4 @@
 ToDo.txt
 __pycache__/
+todo_app/__pycache__/
+todo_app.egg-info/

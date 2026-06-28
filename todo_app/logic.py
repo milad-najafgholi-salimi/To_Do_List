@@ -1,5 +1,5 @@
 import uuid
-from storage import write_json_file
+from .storage import write_json_file
 
 class Task:
     def __init__(self):
