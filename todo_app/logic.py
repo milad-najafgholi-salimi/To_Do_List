@@ -129,7 +129,7 @@ class TaskManager:
     def display_only_Not_Done(self):
         Not_Done_list = []
         for task in self.task_list:
-            if task["Status"] != "Done":
+            if task["Status"] != "Done" and task["Status"] != "Failed":
                 Not_Done_list.append(task)
         for task in Not_Done_list:
             print(task, "\n")
