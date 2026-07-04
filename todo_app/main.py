@@ -2,7 +2,7 @@ from .storage import check_selection, read_json_file
 from .logic import TaskManager
 
 def main():
-    task_list = []
+    task_dict = {}
 
     while True:
         print("\n --Main Menu--\n")
@@ -25,10 +25,10 @@ def main():
             # Load existing data if file exists and has content
             dict_data = read_json_file(json_file)
             if dict_data:
-                task_list.extend(dict_data)
-
-            # Create TaskManager instance with the task_list
-            manager = TaskManager(task_list)
+                for task in dict_data:
+                    task_dict[task["UUID"]] = task
+            # Create TaskManager instance with the task_dict
+            manager = TaskManager(task_dict)
             
             # Task Manager Menu Loop
             while True:

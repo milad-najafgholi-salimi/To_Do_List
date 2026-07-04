@@ -46,19 +46,18 @@ class Task:
         }
 
 class TaskManager:
-    def __init__(self, task_list):
-        self.task_list = task_list
+    def __init__(self, task_dict):
+        self.task_dict = task_dict
     
     @staticmethod
-    def task_uuid(task_list):
+    def task_uuid(task_dict):
         """
-        Checks if a specific uuid exists in the task_list
+        Checks if a specific uuid exists in the task_dict
         Returns: (bool, dict_element)
         """
         input_uuid = input("\nEnter UUID: ")
-        for dict_element in task_list:
-            if dict_element["UUID"] == input_uuid:
-                return True, dict_element
+        if input_uuid in task_dict:
+            return True, task_dict[input_uuid]
         return False, None
 
     def add_task(self):
@@ -67,26 +66,21 @@ class TaskManager:
         task.title = input("\nTitle:")
         task.description = input("\nDescription: ")
         task.priority = task.set_priority()
-        task.dict = task.to_dict() # return a dictionary
-        self.task_list.append(task.dict)
+        task.dict = task.to_dict() # return an organized dictionary
+        self.task_dict[task.uuid] = task.dict
         print("\nNew task added successfully.")
         
 
     def remove_task(self): # search via uuid
-        """
-        task_uuid function checks every single element in task_list that entered uuid is 
-        the same with that specific uuid or not; 
-        Then returns True or False;
-        """
-        uuid_status, dict_element = self.task_uuid(self.task_list) 
+        uuid_status, dict_element = self.task_uuid(self.task_dict) 
         if uuid_status:
-            self.task_list.remove(dict_element)
+            del self.task_dict[dict_element["UUID"]]
             print("\nTask removed.\n")
         else:
             print("\nNot found!\n")
 
-    def change_status(self): # Changing 'Status' from "In process" to "Done"
-        uuid_status, dict_element = self.task_uuid(self.task_list)
+    def change_status(self): # Changing 'Status' from "In process" to whatever you want
+        uuid_status, dict_element = self.task_uuid(self.task_dict)
         if uuid_status:
             input_user_status = input("\nEnter status: ")
             dict_element["Status"] = input_user_status
@@ -95,7 +89,7 @@ class TaskManager:
             print("\nNot found!\n")  
 
     def change_priority(self):
-        uuid_status, dict_element = self.task_uuid(self.task_list)
+        uuid_status, dict_element = self.task_uuid(self.task_dict)
         if uuid_status:
             task = Task()
             dict_element["Priority"] = task.set_priority()
@@ -104,42 +98,36 @@ class TaskManager:
             print("\nNot found!\n")
 
     def show_task(self): # show an specific task via uuid
-        uuid_status, dict_element = self.task_uuid(self.task_list)
+        uuid_status, dict_element = self.task_uuid(self.task_dict)
         if uuid_status:
             print(f"\n{dict_element}\n")
         else:
             print("\nNot found!\n")
 
     def display(self): # show all tasks
-        if not self.task_list: # check is empty
+        if not self.task_dict: # check is empty
             print("\nNo tasks available. \n")
         else:
-            for element in self.task_list:
+            for element in self.task_dict.values(): # Returns all values without keys
                 print(f"{element}\n")
             print("\n-- End of tasks --")
 
     def display_only_Done(self):
-        done_list = []
-        for task in self.task_list:
+        for task in self.task_dict.values(): # Returns all values without keys
             if task["Status"] == "Done":
-                done_list.append(task)
-        for task in done_list:
-            print(task, "\n")
+                print(task, "\n")
 
     def display_only_Not_Done(self):
-        Not_Done_list = []
-        for task in self.task_list:
+        for task in self.task_dict.values(): # Returns all values without keys
             if task["Status"] != "Done" and task["Status"] != "Failed":
-                Not_Done_list.append(task)
-        for task in Not_Done_list:
-            print(task, "\n")
+                print(task, "\n")
 
     def sort_by_priority_and_display(self, json_file):
         sort_list = []
         high_list = []
         medium_list = []
         low_list = []
-        for task in self.task_list:
+        for task in self.task_dict.values(): # Returns all values without keys
             if task["Priority"] == "High":
                 high_list.append(task)
             elif task["Priority"] == "Medium":
@@ -151,11 +139,12 @@ class TaskManager:
         sort_list.extend(low_list)
         for task in sort_list:
             print(task,"\n")
-        self.task_list = sort_list
+        self.task_dict = {task["UUID"]: task for task in sort_list}
         self.save(json_file)
 
     def save(self, json_file): # dump in json file
-        write_json_file(json_file, self.task_list)
+        task_list = list(self.task_dict.values())
+        write_json_file(json_file, task_list)
         print("\nSaved successfully.\n")
     
     def exit(self, json_file):
