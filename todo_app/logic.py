@@ -63,7 +63,7 @@ class TaskManager:
     def add_task(self):
         task = Task()
         task.uuid = task.set_uuid()
-        task.title = input("\nTitle:")
+        task.title = input("\nTitle: ")
         task.description = input("\nDescription: ")
         task.priority = task.set_priority()
         task.dict = task.to_dict() # return an organized dictionary
@@ -104,47 +104,86 @@ class TaskManager:
         else:
             print("\nNot found!\n")
 
-    def display(self): # show all tasks
+    def display_tasks(self): # show all tasks
         if not self.task_dict: # check is empty
             print("\nNo tasks available. \n")
         else:
+            print("\n-- Start of tasks --\n")
             for element in self.task_dict.values(): # Returns all values without keys
                 print(f"{element}\n")
-            print("\n-- End of tasks --")
+            print("\n-- End of tasks --\n")
 
     def display_only_Done(self):
         for task in self.task_dict.values(): # Returns all values without keys
             if task["Status"] == "Done":
                 print(task, "\n")
 
-    def display_only_Not_Done(self):
+    def display_only_in_process(self):
         for task in self.task_dict.values(): # Returns all values without keys
             if task["Status"] != "Done" and task["Status"] != "Failed":
                 print(task, "\n")
 
+    def display_only_failed(self):
+        for task in self.task_dict.values(): # Returns all values without keys
+            if task["Status"] == "Failed":
+                print(task, "\n")
+
     def sort_by_priority_and_display(self, json_file):
-        sort_list = []
+        All_sort_list = []
+        Done_list = []
+        In_Process_list = []
+        Failed_list = []
+        Other_list = []
+
+        for task in self.task_dict.values():
+            if task["Status"] == "Done":
+                Done_list.append(task)
+            elif task["Status"] == "In process":
+                In_Process_list.append(task)
+            elif task["Status"] == "Failed":
+                Failed_list.append(task)
+            else:
+                Other_list.append(task)
+
+        sorted_Done_tasks = self.sort_priority(Done_list)
+        sorted_In_Process_tasks = self.sort_priority(In_Process_list)
+        sorted_Failed_tasks = self.sort_priority(Failed_list)
+        sorted_Other_tasks = self.sort_priority(Other_list)
+
+        All_sort_list.extend(sorted_Done_tasks)
+        All_sort_list.extend(sorted_In_Process_tasks)
+        All_sort_list.extend(sorted_Failed_tasks)
+        All_sort_list.extend(sorted_Other_tasks)
+
+        for task in All_sort_list:
+            print(task, "\n")
+            
+        self.save(json_file, All_sort_list)
+
+    def sort_priority(self, List: list) -> list:
+        sorted_list = []
         high_list = []
         medium_list = []
         low_list = []
-        for task in self.task_dict.values(): # Returns all values without keys
+        for task in List:
             if task["Priority"] == "High":
                 high_list.append(task)
             elif task["Priority"] == "Medium":
                 medium_list.append(task)
             elif task["Priority"] == "Low":
                 low_list.append(task)
-        sort_list.extend(high_list)
-        sort_list.extend(medium_list)
-        sort_list.extend(low_list)
-        for task in sort_list:
-            print(task,"\n")
-        self.task_dict = {task["UUID"]: task for task in sort_list}
-        self.save(json_file)
 
-    def save(self, json_file): # dump in json file
-        task_list = list(self.task_dict.values())
+        sorted_list.extend(high_list)
+        sorted_list.extend(medium_list)
+        sorted_list.extend(low_list)
+        return sorted_list
+
+    def save(self, json_file, task_list = None): # dump in json file
+        if task_list is None:
+            task_list = list(self.task_dict.values())
         write_json_file(json_file, task_list)
+        # Updating task_dict via task_list
+        self.task_dict = {task["UUID"]: task for task in task_list}
         print("\nSaved successfully.\n")
     
     def exit(self, json_file):

@@ -65,7 +65,8 @@ def main():
                     print("1. All")
                     print("2. Only \"Done\"")
                     print("3. Only \"Not Done\"")
-                    print("4. Sort by priority from High to Low\n")
+                    print("4. Only \"Failed\"")
+                    print("5. Display & Sort tasks by 'priority' & 'status'\n")
                     try:
                         select = int(input("Select: "))
                     except ValueError:
@@ -73,12 +74,14 @@ def main():
                         continue
                     match select:
                         case 1:
-                            manager.display()
+                            manager.display_tasks()
                         case 2:
                             manager.display_only_Done()
                         case 3:
-                            manager.display_only_Not_Done()
+                            manager.display_only_in_process()
                         case 4:
+                            manager.display_only_failed()
+                        case 5:
                             manager.sort_by_priority_and_display(json_file)
                         case _:
                             print("\nInvalid Value!\n")
