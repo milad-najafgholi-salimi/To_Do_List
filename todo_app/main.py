@@ -2,8 +2,6 @@ from .storage import check_selection, read_json_file
 from .logic import TaskManager
 
 def main():
-    task_dict = {}
-
     while True:
         print("\n --Main Menu--\n")
         print("1. Open existing file\n")
@@ -18,14 +16,28 @@ def main():
         
         json_file = check_selection(user_select) # json_file: directory/file.json
 
-        if json_file == False or json_file == 3:
+        if json_file is False:
+            break
+        elif user_select == 3:
             break
 
         elif user_select == 1 or user_select == 2:
+            task_dict = {}
             # Load existing data if file exists and has content
-            dict_data = read_json_file(json_file)
-            if dict_data:
-                for task in dict_data:
+            data = read_json_file(json_file) # data is a list with dictionary elements.
+            if data:
+                for task in data:
+                    """
+                    :data: list
+                    :task: dictionary
+                    :task["UUID"]: return UUID Value via UUID Key 
+
+                    Add to task_dict Dictionary:
+                    task_dict[UUID as string] = task as a dictionary
+                    
+                    Output is like:
+                    {UUID_A: {task_A}, UUID_B: {task_B}}
+                    """
                     task_dict[task["UUID"]] = task
             # Create TaskManager instance with the task_dict
             manager = TaskManager(task_dict)
@@ -82,7 +94,7 @@ def main():
                         case 4:
                             manager.display_only_failed()
                         case 5:
-                            manager.sort_by_priority_and_display(json_file)
+                            manager.sort_by_priority_and_display()
                         case _:
                             print("\nInvalid Value!\n")
 

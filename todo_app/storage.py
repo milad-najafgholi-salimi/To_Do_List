@@ -62,14 +62,14 @@ def read_json_file(json_file : str) : # Read & take information
         with open(json_file, "r", encoding="utf-8") as file:
             if os.path.getsize(json_file) == 0:
                 return []
-            dict_data = json.load(file)
-            return dict_data if isinstance(dict_data, list) else [] # Checks the content are correct or not;
+            data = json.load(file) # data is a list with dictionary elements, if it wasn't empty.
+            return data if isinstance(data, list) else [] # Checks the content are correct or not;
     except (json.JSONDecodeError, FileNotFoundError):                                        # and returns an empty list if it wasn't.
         return []
 
-def write_json_file(json_file : str, task_list : list) -> str:
+def write_json_file(json_file : str, data_as_list : list) -> str:
     """
     write & save - write new json data that has been change.
     """
     with open(json_file, "w", encoding="utf-8") as file:
-        json.dump(task_list, file, indent=4)
+        json.dump(data_as_list, file, indent=4)
