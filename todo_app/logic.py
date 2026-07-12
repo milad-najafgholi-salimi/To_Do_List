@@ -49,7 +49,32 @@ class Task:
                 priority = "Low"
                 self.weight = self.PRIORITY_WEIGHTS[priority]
                 return priority
-        
+
+    def set_status(self) -> str:
+        print("\n-- Set status --\n")  
+        print("1.Done\n2.Failed\n3.In process\n")
+        try:
+            choice = int(input("Enter your choice: "))
+        except ValueError:
+            print("\nInvalid input\nsetting to Default (3.In process)\n")
+            return "In process"
+        else:
+            if choice in (1, 2, 3):
+                match choice:
+                    case 1:
+                        return "Done"
+                    case 2:
+                        return "Failed"
+                    case 3:
+                        return "In process"
+            else:
+                print("\nOut of range! setting to Default (3.In process)\n")
+                return "In process"
+
+    def set_description(self) -> str:
+        print("\n-- Set description --\n")  
+        description = input("Set new description: ")
+        return description
 
     def to_dict(self) -> dict:
         return {
@@ -103,15 +128,16 @@ class TaskManager:
             print("\nNot found!\n")
         print("="*50 + "\n")
 
-    def change_status(self): # Changing 'Status' from "In process" to whatever you want
+    def change_status(self):
         print("\n" + "="*50)
         print("--- Changing a Task Status ---")
         print("="*50)
         uuid_status, dict_element = self.task_uuid(self.task_dict)
         if uuid_status:
-            input_user_status = input("\nEnter status: ")
-            dict_element["Status"] = input_user_status
-            print(f"\nStatus changed successfully to \"{input_user_status}\".\n")
+            task = Task()
+            status = task.set_status()
+            dict_element["Status"] = status
+            print(f"\nStatus changed successfully to \"{status}\".\n")
         else:
             print("\nNot found!\n")
         print("="*50 + "\n")
@@ -126,6 +152,19 @@ class TaskManager:
             dict_element["Priority"] = task.set_priority()
             dict_element["Weight"] = task.weight
             print("\n'Priority' changed successfully!\n")
+        else:
+            print("\nNot found!\n")
+        print("="*50 + "\n")
+
+    def change_description(self):
+        print("\n" + "="*50)
+        print("--- Changing a Task Priority ---")
+        print("="*50)
+        uuid_status, dict_element = self.task_uuid(self.task_dict)
+        if uuid_status:
+            task = Task()
+            dict_element["Description"] = task.set_description()
+            print("\n'Description' changed successfully!\n")
         else:
             print("\nNot found!\n")
         print("="*50 + "\n")

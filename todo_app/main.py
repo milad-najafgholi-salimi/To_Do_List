@@ -49,10 +49,11 @@ def main():
                 print("2. Remove task\n")
                 print("3. Change status\n")
                 print("4. Change priority\n")
-                print("5. Display tasks\n")
-                print("6. Display specific task\n")
-                print("7. Save\n")
-                print("8. Save & Exit\n")
+                print("5. Change description\n")
+                print("6. Display tasks\n")
+                print("7. Display specific task\n")
+                print("8. Save\n")
+                print("9. Save & Exit\n")
                 
                 try:
                     user_choice = int(input("Select: "))
@@ -71,8 +72,11 @@ def main():
 
                 elif user_choice == 4:
                     manager.change_priority()
-
+                
                 elif user_choice == 5:
+                    manager.change_description()
+
+                elif user_choice == 6:
                     print("\n-- Display Tasks --\n")
                     print("1. All")
                     print("2. Only \"Done\"")
@@ -98,13 +102,13 @@ def main():
                         case _:
                             print("\nInvalid Value!\n")
 
-                elif user_choice == 6:
+                elif user_choice == 7:
                     manager.show_task()
 
-                elif user_choice == 7:
+                elif user_choice == 8:
                     manager.save(json_file)
 
-                elif user_choice == 8:
+                elif user_choice == 9:
                     result = manager.exit(json_file)
                     if result == False:
                         break
