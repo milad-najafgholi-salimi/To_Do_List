@@ -1,5 +1,6 @@
 import uuid
-from .storage import write_json_file, read_json_file
+from .storage import write_json_file
+from .ui import print_menu
 
 class Task:
     # Weighted Average - Every task by it's priority, have different weights
@@ -10,71 +11,13 @@ class Task:
         "Low": 1
     }
 
-    def __init__(self):
-        self.uuid = None 
-        self.title = None
-        self.description = None
-        self.priority = None
-        self.status = "In process"  # for all instances
-        self.dict = None   # returns a dict
-        self.weight = None
-
-    def set_uuid(self):
-        return str(uuid.uuid4())
-
-    def set_priority(self) -> str:
-        print("\n--Set priority--\n")
-        print("1.High\n2.Medium\n3.Low\n")
-        
-        try:
-            choice = int(input("Enter your choice: "))
-        except ValueError:
-            print("\nInvalid input\nsetting to Default (3.Low)\n")
-            priority = "Low"
-            self.weight = self.PRIORITY_WEIGHTS[priority] 
-            return priority
-        else:
-            if choice in (1, 2, 3):
-                match choice:
-                    case 1:
-                        priority = "High"
-                    case 2:
-                        priority = "Medium"
-                    case 3:
-                        priority = "Low"
-                self.weight = self.PRIORITY_WEIGHTS[priority]
-                return priority
-            else:
-                print("\nOut of range! setting to Default (3.Low)\n")
-                priority = "Low"
-                self.weight = self.PRIORITY_WEIGHTS[priority]
-                return priority
-
-    def set_status(self) -> str:
-        print("\n-- Set status --\n")  
-        print("1.Done\n2.Failed\n3.In process\n")
-        try:
-            choice = int(input("Enter your choice: "))
-        except ValueError:
-            print("\nInvalid input\nsetting to Default (3.In process)\n")
-            return "In process"
-        else:
-            if choice in (1, 2, 3):
-                match choice:
-                    case 1:
-                        return "Done"
-                    case 2:
-                        return "Failed"
-                    case 3:
-                        return "In process"
-            else:
-                print("\nOut of range! setting to Default (3.In process)\n")
-                return "In process"
-
-    def set_description(self) -> str:
-        print("\n-- Set description --\n")  
-        description = input("Set new description: ")
-        return description
+    def __init__(self, title: str, description: str, priority: str, status: str = "In process"):
+        self.uuid = str(uuid.uuid4())
+        self.title = title
+        self.description = description
+        self.priority = priority
+        self.status = status
+        self.weight = self.PRIORITY_WEIGHTS[priority]
 
     def to_dict(self) -> dict:
         return {
@@ -90,178 +33,250 @@ class TaskManager:
     def __init__(self, task_dict):
         self.task_dict = task_dict
 
-    @staticmethod
-    def task_uuid(task_dict):
-        """
-        Checks if a specific uuid exists in the task_dict
-        Return: (bool, dict_element)
-        """
+    def get_task_by_uuid(self) -> dict | None:
         input_uuid = input("\nEnter UUID: ")
-        if input_uuid in task_dict:
-            return True, task_dict[input_uuid] # :task_dict[input_uuid]: Returns {task} - as value - UUID_key: {task}_value
-        return False, None
+
+        return self.task_dict.get(input_uuid)
+    
+    def get_selected_task(self) -> dict | None:
+        task = self.get_task_by_uuid()
+
+        if task is None:
+            print("\nTask not found!\n")
+        
+        return task
+    
+    def get_priority(self) -> str:
+        print_menu("Set Priority", ["High", "Medium", "Low"])
+
+        try:
+            choice = int(input("Enter your choice: "))
+        except ValueError:
+            print("\nInvalid input.")
+            print("Setting to default: Low\n")
+            return "Low"
+
+        match choice:
+            case 1:
+                return "High"
+            case 2:
+                return "Medium"
+            case 3:
+                return "Low"
+            case _:
+                print("\nOut of range!")
+                print("Setting to default: Low\n")
+                return "Low"
+
+    def get_status(self) -> str:
+        print_menu("Set Status", ["Done", "Failed", "In process"])
+
+        try:
+            choice = int(input("Enter your choice: "))
+        except ValueError:
+            print("\nInvalid input.")
+            print("Setting to default: In process\n")
+            return "In process"
+        
+        match choice:
+            case 1:
+                return "Done"
+            case 2:
+                return "Failed"
+            case 3:
+                return "In process"
+            case _:
+                print("\nOut of range!")
+                print("Setting to default: In process\n")
+                return "In process"
+
+    def get_description(self) -> str:
+        return input("\nSet new description: ")
+
+    def display_task_info(self, task: dict, index: int | None = None) -> None:
+        if index is not None:
+            print(f"{index}. UUID: {task['UUID']}")
+        else:
+            print(f"UUID: {task['UUID']}")
+
+        print(f"Title: {task['Title']}")
+        print(f"Description: {task['Description']}")
+        print(f"Priority: {task['Priority']} (Weight: {task.get('Weight', 'N/A')})")
+        print(f"Status: {task['Status']}\n")
 
     def add_task(self) -> None:
-        task = Task()
-        task.uuid = task.set_uuid()
-        print("\n" + "="*50)
-        print("--- Adding New Task ---")
-        print("="*50)
-        task.title = input("\nTitle: ")
-        task.description = input("\nDescription: ")
-        task.priority = task.set_priority()
-        task.dict = task.to_dict() # return an organized dictionary
-        self.task_dict[task.uuid] = task.dict # Add new key-value pair to task_dict
-        print("\nNew task added successfully.")
-        print("\n" + "="*50 + "\n")
+        print_menu("Adding Task")
 
+        title = input("\nTitle: ")
+        description = input("\nDescription: ")
+
+        priority = self.get_priority()
+
+        task = Task(title=title, description=description, priority=priority)
+
+        self.task_dict[task.uuid] = task.to_dict()
+        
+        print("\nNew task added successfully.")
 
     def remove_task(self) -> None: # search via uuid
-        print("\n" + "="*50)
-        print("--- Removing a Task ---")
-        print("="*50)
-        uuid_status, dict_element = self.task_uuid(self.task_dict) 
-        if uuid_status:
-            del self.task_dict[dict_element["UUID"]]
-            print("\nTask removed.\n")
-        else:
-            print("\nNot found!\n")
-        print("="*50 + "\n")
+        print_menu("Removing a Task")
+
+        task = self.get_selected_task()
+
+        if task is None:
+            return
+        
+        del self.task_dict[task["UUID"]]
+
+        print("\nTask removed.\n")
 
     def change_status(self):
-        print("\n" + "="*50)
-        print("--- Changing a Task Status ---")
-        print("="*50)
-        uuid_status, dict_element = self.task_uuid(self.task_dict)
-        if uuid_status:
-            task = Task()
-            status = task.set_status()
-            dict_element["Status"] = status
-            print(f"\nStatus changed successfully to \"{status}\".\n")
-        else:
-            print("\nNot found!\n")
-        print("="*50 + "\n")
+        print_menu("Changing a Task Status")
+        task = self.get_selected_task()
+
+        if task is None:
+            return
+        
+        status = self.get_status()
+        task["Status"] = status
+
+        print(f"\nStatus changed successfully to '{status}'.\n")
 
     def change_priority(self):
-        print("\n" + "="*50)
-        print("--- Changing a Task Priority ---")
-        print("="*50)
-        uuid_status, dict_element = self.task_uuid(self.task_dict)
-        if uuid_status:
-            task = Task()
-            dict_element["Priority"] = task.set_priority()
-            dict_element["Weight"] = task.weight
-            print("\n'Priority' changed successfully!\n")
-        else:
-            print("\nNot found!\n")
-        print("="*50 + "\n")
+        print_menu("Changing a Task Priority")
+
+        task = self.get_selected_task()
+
+        if task is None:
+            return
+        
+        priority = self.get_priority()
+
+        task["Priority"] = priority
+        task["Weight"] = Task.PRIORITY_WEIGHTS[priority]
+
+        print("\nPriority changed successfully!\n")
 
     def change_description(self):
-        print("\n" + "="*50)
-        print("--- Changing a Task Priority ---")
-        print("="*50)
-        uuid_status, dict_element = self.task_uuid(self.task_dict)
-        if uuid_status:
-            task = Task()
-            dict_element["Description"] = task.set_description()
-            print("\n'Description' changed successfully!\n")
-        else:
-            print("\nNot found!\n")
-        print("="*50 + "\n")
+        print_menu("Changing a Task Description")
+
+        task = self.get_selected_task()
+
+        if task is None:
+            return
+        
+        description = self.get_description()
+        task["Description"] = description
+
+        print("\nDescription changed successfully!\n")
 
     def show_task(self): # show an specific task via uuid
-        print("\n" + "="*50)
-        print("--- Display an Specific Task ---")
-        print("="*50)
-        uuid_status, dict_element = self.task_uuid(self.task_dict)
-        if uuid_status:
-            print(f"\nUUID: {dict_element['UUID']}")
-            print(f"Title: {dict_element['Title']}")
-            print(f"Description: {dict_element['Description']}")
-            print(f"Priority: {dict_element['Priority']} (Weight: {dict_element.get('Weight', 'N/A')})")
-            print(f"Status: {dict_element['Status']}\n")
-        else:
-            print("\nNot found!\n")
-        print("="*50 + "\n")
+        print_menu("Displaying a Specific Task")
 
-    def display_tasks(self) -> None: # show all tasks
-        if not self.task_dict: # check is empty
-            print("\nNo tasks available. \n")
-        else:
-            index = 1
-            for element in self.task_dict.values(): # Returns all values without keys
-                print(f"{index}. UUID: {element['UUID']}")
-                print(f"    Title: {element['Title']}")
-                print(f"    Description: {element['Description']}")
-                print(f"    Priority: {element['Priority']} (Weight: {element.get('Weight', 'N/A')})")
-                print(f"    Status: {element['Status']}\n")
-                index += 1
-            print("-"*50 + "\n")
-            self.report(list(self.task_dict.values()))
+        task = self.get_selected_task()
 
-    def display_only_Done(self):
-        for task in self.task_dict.values(): # Returns all values without keys
-            if task["Status"] == "Done":
-                print(task, "\n")
+        if task is None:
+            return
+        
+        self.display_task_info(task)
 
-    def display_only_in_process(self):
-        for task in self.task_dict.values(): # Returns all values without keys
-            if task["Status"] != "Done" and task["Status"] != "Failed":
-                print(task, "\n")
+    def display_tasks(self) -> None:
+        print_menu("Displaying Tasks")
 
-    def display_only_failed(self):
-        for task in self.task_dict.values(): # Returns all values without keys
-            if task["Status"] == "Failed":
-                print(task, "\n")
+        if not self.task_dict:
+            print("\nNo tasks available.\n")
+            return
 
-    def sort_by_priority_and_display(self):
-        All_sort_list = []
-        Done_list = []
-        In_Process_list = []
-        Failed_list = []
-        Other_list = []
+        for index, task in enumerate(self.task_dict.values(), start=1):
+            self.display_task_info(task, index)
 
-        for task in self.task_dict.values():
-            if task["Status"] == "Done":
-                Done_list.append(task)
-            elif task["Status"] == "In process":
-                In_Process_list.append(task)
-            elif task["Status"] == "Failed":
-                Failed_list.append(task)
-            else:
-                Other_list.append(task)
-
-        sorted_Done_tasks = self.sort_priority(Done_list)
-        sorted_In_Process_tasks = self.sort_priority(In_Process_list)
-        sorted_Failed_tasks = self.sort_priority(Failed_list)
-        sorted_Other_tasks = self.sort_priority(Other_list)
-
-        All_sort_list.extend(sorted_Done_tasks)
-        All_sort_list.extend(sorted_In_Process_tasks)
-        All_sort_list.extend(sorted_Failed_tasks)
-        All_sort_list.extend(sorted_Other_tasks)
-
-        # Updating task_dict via All_sort_list
-        self.task_dict = {task["UUID"]: task for task in All_sort_list}
-
-        index = 1
-        for task in All_sort_list:
-            print(f"{index}. UUID: {task['UUID']}")
-            print(f"    Title: {task['Title']}")
-            print(f"    Description: {task['Description']}")
-            print(f"    Priority: {task['Priority']} (Weight: {task.get('Weight', 'N/A')})")
-            print(f"    Status: {task['Status']}\n")
-            index += 1
-
-        print("-"*50 + "\n")
         self.report(list(self.task_dict.values()))
 
-    def sort_priority(self, List: list) -> list:
-        sorted_list = []
+    def display_only_done(self) -> None:
+        print_menu("Completed Tasks")
+
+        found_task = False
+
+        for task in self.task_dict.values(): # Returns all values without keys
+            if task["Status"] == "Done":
+                self.display_task_info(task)
+                found_task = True
+
+        if not found_task:
+            print("\nNo completed tasks found!\n")
+
+    def display_only_in_process(self) -> None:
+        print_menu("Tasks In Process")
+
+        found_task = False
+
+        for task in self.task_dict.values(): # Returns all values without keys
+            if task["Status"] == "In process":
+                self.display_task_info(task)
+                found_task = True
+
+        if not found_task:
+            print("\nNo tasks in process found!\n")
+
+    def display_only_failed(self) -> None:
+        print_menu("Failed Tasks")
+
+        found_task = False
+
+        for task in self.task_dict.values(): # Returns all values without keys
+            if task["Status"] == "Failed":
+                self.display_task_info(task)
+                found_task = True
+
+            if not found_task:
+                print("\nNo failed tasks found!\n")
+
+    def sort_by_priority_and_display(self) -> None:
+        print_menu("Tasks Sorted by Status and Priority")
+
+        done_tasks = []
+        in_process_tasks = []
+        failed_tasks = []
+        other_tasks = []
+
+        for task in self.task_dict.values():
+            status = task["Status"]
+
+            if status == "Done":
+                done_tasks.append(task)
+            elif status == "In process":
+                in_process_tasks.append(task)
+            elif status == "Failed":
+                failed_tasks.append(task)
+            else:
+                other_tasks.append(task)
+
+        # All variables are list. 
+        # Attention: '()' in sorted_tasks are for readability and it is a list, not a tuple.
+        # '+' extend the lists together.
+        sorted_tasks = (
+            self.sort_priority(done_tasks)
+            + self.sort_priority(in_process_tasks)
+            + self.sort_priority(failed_tasks)
+            + self.sort_priority(other_tasks)
+        )
+
+        self.task_dict = {
+            task["UUID"]: task
+            for task in sorted_tasks
+        }
+
+        for index, task in enumerate(sorted_tasks, start=1):
+            self.display_task_info(task, index)
+
+        self.report(sorted_tasks)
+
+    def sort_priority(self, task_list: list) -> list:
         high_list = []
         medium_list = []
         low_list = []
-        for task in List:
+
+        for task in task_list:
             if task["Priority"] == "High":
                 high_list.append(task)
             elif task["Priority"] == "Medium":
@@ -269,10 +284,7 @@ class TaskManager:
             elif task["Priority"] == "Low":
                 low_list.append(task)
 
-        sorted_list.extend(high_list)
-        sorted_list.extend(medium_list)
-        sorted_list.extend(low_list)
-        return sorted_list
+        return high_list + medium_list + low_list # extend lists into a list 
     
     def report(self, data: list) -> dict: 
         """
@@ -341,7 +353,7 @@ class TaskManager:
             grade_description = "Not good - Try harder"
         else:
             grade = "F"
-            grade_description = "Awefull - what the fuck is this?"
+            grade_description = "Awfull - what the fuck is this?"
 
         report = {
             "Total Tasks": total_tasks,
@@ -399,20 +411,23 @@ class TaskManager:
         print(f"Report file saved to: {report_file}\n")
 
 
-    def exit(self, json_file):
-        print("\n1. Save changes\n")
+    def exit_menu(self, json_file) -> bool:
+        print("\n1. Save changes")
         print("2. Discard Changes\n")
+        
         try:
             user_select = int(input("Select: "))
         except ValueError:
             print("\nInvalid Value\n")
-            return True
+            return False
+        
         if user_select == 1:
             self.save(json_file)
-            return False
+            return True
+        
         elif user_select == 2:
             print("Exit 'WITHOUT' saving changes\n")
-            return False
-        else:
-            print("\nInvalid Value\n")
             return True
+    
+        print("\nInvalid Value\n")
+        return False
