@@ -1,114 +1,272 @@
 # ToDo List CLI Application
-A command-line task management tool built with Python. It includes features like priority levels, status tracking, sorting, and report generation with weighted grading. All tasks are stored persistently in JSON files.
+
+A command-line task management application built with Python. It provides a structured way to create, manage, organize, and track tasks through a simple CLI interface.
+
+The application supports priority levels, status tracking, UUID-based task selection, sorting, progress reports, weighted completion scoring, and persistent JSON storage.
 
 ## Features
-- Add, edit, delete, and view tasks — everything you need for basic task management
 
-- Priority levels — High, Medium, or Low, with **weighted scoring** for better progress tracking
+* **Add tasks** — create tasks with a title, description, priority, and status.
 
-- Status tracking — mark tasks as Done, In process, Failed, or use your own custom status
+* **Modify tasks** — change a task's description, priority, or status.
 
-- Filter and sort — view tasks by status, or sort them by priority and status together
+* **Delete tasks** — remove tasks by selecting their UUID.
 
-- Task reports — see completion stats, weighted scores, and get a grade (A to F) based on progress
+* **View tasks** — display all tasks or view a specific task using its UUID.
 
-- Save to JSON — all tasks are stored in simple, readable JSON files
+* **Priority levels** — assign one of three priority levels: `High`, `Medium`, or `Low`.
 
-- Separate report files — each save creates a report file alongside your task file
+* **Weighted priority system** — each priority level has a different weight:
 
-- UUID for each task — makes it easy to find and manage specific tasks
+  * `High` → 3
+  * `Medium` → 2
+  * `Low` → 1
 
-#### **(Hint: Display tasks and just copy UUID task via `ctrl+Lshift+c` then paste it via `ctrl+Lshift+v` to modify task)**
+* **Status tracking** — tasks can have one of the following statuses:
 
-- File dialog — use a simple GUI window to open or create task files (no need to type file paths)
+  * `Done`
+  * `In process`
+  * `Failed`
+
+* **Filter tasks by status** — view only completed, in-process, or failed tasks.
+
+* **Sort tasks** — organize tasks first by status and then by priority.
+
+* **Task reports** — generate statistics including:
+
+  * Total number of tasks
+  * Total task weight
+  * Completed tasks
+  * Failed tasks
+  * In-process tasks
+  * Completion percentages
+  * Weighted completion percentage
+  * Overall grade from `A` to `F`
+
+* **Weighted progress grading** — task completion is evaluated based on task weights, so completing a high-priority task has a greater impact on the overall progress score than completing a low-priority task.
+
+* **UUID-based task selection** — every task receives a unique UUID, making it easy to find and manage a specific task.
+
+> **Tip:** To modify or manage a specific task, display the tasks, copy the task's UUID, and paste it when the application asks you to enter a UUID.
+
+* **JSON persistence** — all tasks are stored in simple, readable JSON files.
+
+* **Separate report files** — saving tasks also generates a separate JSON report file containing task statistics.
+
+* **File dialog support** — use a graphical file dialog to open an existing JSON file or create a new one without manually typing file paths.
+
+* **Reusable menu system** — menu headers and option lists are generated through a reusable `print_menu()` utility.
+
+* **Reusable task display logic** — task information is displayed through a centralized `display_task_info()` method, reducing duplicated code.
 
 ## Installation
 
 ### Prerequisites
-- Python 3.12 or higher
-- pip (version 21+)
 
-This has been developed on this specific version (Python 3.12) of Python, and using that version is recommended, but it is also compatible with newer versions. It may also work well with older versions.
+* Python 3.12 or higher
+* pip 21 or higher
+
+The project was developed and tested with Python 3.12. Using Python 3.12 or a newer version is recommended.
+
+The application may also work with older Python versions, but compatibility with older versions is not guaranteed.
 
 ### Installation Methods
 
-#### **Method 1: Editable Install (Recommended for Development)**
+#### Method 1: Editable Install — Recommended for Development
 
-This method installs the package in development mode, meaning any changes you make to the code will take effect immediately.
+This method installs the package in development mode. Changes made to the source code will be immediately reflected when running the application.
 
-```
+```bash
 git clone https://github.com/milad-najafgholi-salimi/To_Do_List.git
-```
-```
+
 cd To_Do_List
-```
-```
+
 pip install -e .
 ```
-#### **Method 2: Install Directly from GitHub**
-No need to clone the repository manually — pip will handle everything.
-```
+
+#### Method 2: Install Directly from GitHub
+
+You can install the project directly without manually cloning the repository:
+
+```bash
 pip install git+https://github.com/milad-najafgholi-salimi/To_Do_List.git
 ```
-#### **Method 3: Standard Install (After Cloning)**
-```
+
+#### Method 3: Standard Install
+
+```bash
 git clone https://github.com/milad-najafgholi-salimi/To_Do_List.git
-```
-```
+
 cd To_Do_List
-```
-```
+
 pip install .
 ```
 
 ## Quick Start
+
 After installation, run the application with:
-```
+
+```bash
 todo-app
 ```
 
+The application will guide you through the available options for opening an existing task file, creating a new task file, or exiting the program.
+
+## Project Structure
+
+The project is organized into separate modules based on their responsibilities:
+
+```text
+To_Do_List/
+│
+├── src/
+│   └── todo_app/
+│       ├── main.py
+│       ├── logic.py
+│       ├── storage.py
+│       └── ui.py
+│
+├── pyproject.toml
+└── README.md
+```
+
+### `main.py`
+
+Handles the main application flow and menu navigation.
+
+### `logic.py`
+
+Contains the core application logic, including:
+
+* Task creation
+* Task modification
+* Task deletion
+* Task selection
+* Task filtering
+* Task sorting
+* Progress reports
+* Weighted grading
+
+### `storage.py`
+
+Handles JSON file operations, including:
+
+* Opening existing JSON files
+* Creating new JSON files
+* Reading task data
+* Writing task data
+* Handling invalid or empty JSON files
+
+### `ui.py`
+
+Contains reusable user interface utilities, including the `print_menu()` function used to generate consistent menu headers and option lists.
+
 ## Why This Project?
-I built this project to solve an actual need I had, and to get better at programming in the process. The idea started as a set of text-based requirements from an AI — I then implemented the whole thing myself, without looking at any pre-written code.
 
-(**But I did use AI as a tool to get help — nevertheless, not to directly take the main code.**)
+I built this project to solve an actual need I had while improving my programming skills.
 
-Working on this helped me:
-- Get more comfortable with OOP (which I had struggled with before)
+The idea started as a set of text-based requirements generated with the help of AI. I then designed and implemented the application myself, gradually improving its structure through refactoring and practice.
 
-- Practice reading from and writing to JSON files
+I did use AI as a learning and development tool for explanations, debugging assistance, and guidance. However, I did not simply copy the main code from AI.
 
-- Handle user input and errors more carefully
+Working on this project helped me:
 
-- Build a complete CLI tool from scratch
+* Become more comfortable with Object-Oriented Programming (OOP), which I had previously struggled with.
+
+* Practice reading from and writing to JSON files.
+
+* Improve my understanding of modular programming.
+
+* Practice separating application logic, storage operations, and user interface utilities.
+
+* Handle user input and invalid input more carefully.
+
+* Practice working with dictionaries, lists, and list transformations.
+
+* Build a complete CLI application from scratch.
+
+* Improve code readability and reduce duplicated code through refactoring.
 
 ## Key Technical Features
-- Weighted Priority System: Tasks have different weights based on priority for more accurate progress tracking
 
-- UUID Generation: Ensures unique identification for each task
+### Object-Oriented Programming
 
-- JSON Persistence: All data stored in human-readable JSON format
+The application uses classes to organize task-related data and operations.
 
-- Report Generation: Creates separate report files for analytics
+The `Task` class is responsible for representing individual tasks, while the `TaskManager` class handles task management operations.
 
-- Graceful Error Handling: User-friendly error messages and validation
+### Weighted Priority System
+
+Each task receives a weight based on its priority:
+
+```text
+High   → 3
+Medium → 2
+Low    → 1
+```
+
+This allows the application to calculate progress based not only on the number of completed tasks, but also on the importance of those tasks.
+
+### UUID Generation
+
+Each task receives a unique UUID when it is created.
+
+This allows users to select and manage specific tasks without relying on list indexes.
+
+### JSON Persistence
+
+Task data is stored in human-readable JSON files, allowing the data to remain available between application sessions.
+
+### Report Generation
+
+The application generates statistics about task progress and saves the report in a separate JSON file.
+
+The report includes both regular completion percentages and weighted completion percentages.
+
+### Sorting and Filtering
+
+Tasks can be filtered by status and sorted by status and priority.
+
+The sorting system groups tasks by status and then orders them by priority:
+
+```text
+Status
+└── Priority
+    ├── High
+    ├── Medium
+    └── Low
+```
+
+### Reusable UI Utilities
+
+The `print_menu()` function provides a consistent visual structure for menus throughout the application.
+
+This reduces duplicated formatting code and makes the CLI interface easier to maintain.
 
 ## 🤝 Contributing
-I welcome contributions, suggestions, and bug reports! This is an evolving project, and I plan to continue improving it with new features and enhancements. Feel free to:
 
-- Report issues
+I welcome contributions, suggestions, and bug reports.
 
-- Suggest new features
+This is an evolving project, and I plan to continue improving it with new features and enhancements.
 
-- Submit pull requests
+Feel free to:
 
-- Share your feedback
+* Report bugs
+* Suggest new features
+* Submit pull requests
+* Share feedback
+* Suggest improvements to the code structure
 
 ## 📄 License
-This project is open-source and completely free to use. Feel free to modify, distribute, or use it in your own projects.
+
+This project is open-source and free to use.
+
+You are welcome to modify, distribute, and use the code in your own projects according to the terms of the project's license.
 
 ## 👤 Author
-Milad Najafgholi Salimi
 
-- GitHub: @milad-najafgholi-salimi
+**Milad Najafgholi Salimi**
 
-Built with ❤️ for learning and productivity
+* GitHub: `@milad-najafgholi-salimi`
+
+Built with ❤️ for learning and productivity.
