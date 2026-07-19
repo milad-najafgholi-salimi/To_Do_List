@@ -108,6 +108,10 @@ class TaskManager:
         print_menu("Adding Task")
 
         title = input("\nTitle: ")
+        if bool(title) is False:
+            print("\nTitle shouldn't be empty!\n")
+            return
+        
         description = input("\nDescription: ")
 
         priority = self.get_priority()
