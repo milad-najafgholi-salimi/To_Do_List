@@ -231,9 +231,9 @@ class TaskManager:
             if task["Status"] == "Failed":
                 self.display_task_info(task)
                 found_task = True
-
-            if not found_task:
-                print("\nNo failed tasks found!\n")
+                
+        if not found_task:
+            print("\nNo failed tasks found!\n")
 
     def sort_by_priority_and_display(self) -> None:
         print_menu("Tasks Sorted by Status and Priority")
