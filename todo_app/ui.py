@@ -1,3 +1,18 @@
+import os
+import sys
+
+def clear_screen() -> None:
+    os.system("cls" if sys.platform == "win32" else "clear")
+
+def wait_for_user() -> None:
+    while True:
+        user_input = input("\nPress Enter to continue...")
+
+        if user_input == "":
+            return
+
+        print("\nInvalid input. Please press Enter only.")
+
 def print_menu(title: str, options: list[str] | None = None, width: int = 50) -> None:
     border = "=" * width
     

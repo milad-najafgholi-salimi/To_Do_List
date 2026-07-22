@@ -1,6 +1,6 @@
 from .storage import check_selection, read_json_file
 from .logic import TaskManager
-from .ui import print_menu
+from .ui import print_menu, clear_screen, wait_for_user
 
 def task_manager_menu(manager: TaskManager, json_file: str) -> None:
     """
@@ -23,6 +23,8 @@ def task_manager_menu(manager: TaskManager, json_file: str) -> None:
 
     # Task Manager Menu Loop
     while True:
+        clear_screen()
+
         print_menu("TASK MANAGER", [
         "Add task",
         "Remove task",
@@ -44,6 +46,7 @@ def task_manager_menu(manager: TaskManager, json_file: str) -> None:
 
         if user_choice in actions:
             actions[user_choice]()
+            wait_for_user()
 
         elif user_choice == 6:
             print_menu("DISPLAY TASKS", [
@@ -59,6 +62,7 @@ def task_manager_menu(manager: TaskManager, json_file: str) -> None:
                 select = int(input("Select: "))
             except ValueError:
                 print("\nInvalid value\n")
+                wait_for_user()
                 continue
 
             match select:
@@ -74,6 +78,8 @@ def task_manager_menu(manager: TaskManager, json_file: str) -> None:
                     manager.sort_by_priority_and_display()
                 case _:
                     print("\nInvalid Value!\n")
+            
+            wait_for_user()
 
         elif user_choice == 9:
             if manager.exit_menu(json_file):
@@ -81,17 +87,21 @@ def task_manager_menu(manager: TaskManager, json_file: str) -> None:
 
         else:
             print("\nInvalid value\n")
+            wait_for_user()
 
 
 def main():
     # Main Menu
     while True:
+        clear_screen()
+
         print_menu("MAIN MENU", ["Open existing file", "Create new file", "Quit"])
 
         try:
             user_select = int(input("Select: "))
         except ValueError:
             print("\nInvalid value\n")
+            wait_for_user()
             continue
         
         json_file = check_selection(user_select) # json_file: directory/file.json

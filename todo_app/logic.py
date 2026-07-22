@@ -1,6 +1,6 @@
 import uuid
 from .storage import write_json_file
-from .ui import print_menu
+from .ui import print_menu, wait_for_user
 
 class Task:
     # Weighted Average - Every task by it's priority, have different weights
@@ -423,15 +423,19 @@ class TaskManager:
             user_select = int(input("Select: "))
         except ValueError:
             print("\nInvalid Value\n")
+            wait_for_user()
             return False
         
         if user_select == 1:
             self.save(json_file)
+            wait_for_user()
             return True
         
         elif user_select == 2:
             print("Exit 'WITHOUT' saving changes\n")
+            wait_for_user()
             return True
     
         print("\nInvalid Value\n")
+        wait_for_user()
         return False

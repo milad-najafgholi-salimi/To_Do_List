@@ -1,6 +1,7 @@
 import json
 from pathlib import Path
 from tkinter import filedialog
+from .ui import wait_for_user
 
 def open_existing_file() -> str | bool: # return file path or False
     selected_file = filedialog.askopenfilename(
@@ -10,9 +11,11 @@ def open_existing_file() -> str | bool: # return file path or False
 
     if selected_file:
         print(f"\nWorking with existing file: {selected_file}\n")
+        wait_for_user()
         return selected_file
 
     print("\nFile selection cancelled!\n")
+    wait_for_user()
     return False
 
 def create_new_file() -> str | bool: # return file path or False
@@ -24,6 +27,7 @@ def create_new_file() -> str | bool: # return file path or False
 
     if not file_path:
         print("\nFile creation cancelled.\n")
+        wait_for_user()
         return False
 
     try:
@@ -31,16 +35,12 @@ def create_new_file() -> str | bool: # return file path or False
             json.dump([], file, indent=4)
 
     except FileExistsError:
-        print(
-            f"\nError: File '{Path(file_path).name}' "
-            "already exists!\n"
-        )
+        print(f"\nError: File '{Path(file_path).name}' already exists!\n")
+        wait_for_user()
         return False
 
-    print(
-        f"\nNew file '{Path(file_path).name}' "
-        "created successfully.\n"
-    )
+    print(f"\nNew file '{Path(file_path).name}' created successfully.\n")
+    wait_for_user()
 
     return file_path
 
