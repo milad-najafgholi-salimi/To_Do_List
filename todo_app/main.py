@@ -1,6 +1,19 @@
 from .storage import check_selection, read_json_file
-from .logic import TaskManager
-from .ui import print_menu, clear_screen, wait_for_user
+from .manager import TaskManager
+from .save import save
+from .ui import (
+    print_menu,
+    clear_screen,
+    wait_for_user,
+    add_task_ui,
+    remove_task_ui,
+    change_status_ui,
+    change_priority_ui,
+    change_description_ui,
+    display_tasks,
+)
+from .report import generate_report, display_report
+
 
 def task_manager_menu(manager: TaskManager, json_file: str) -> None:
     """
@@ -12,13 +25,13 @@ def task_manager_menu(manager: TaskManager, json_file: str) -> None:
     only executed when the corresponding user choice is selected.
     """
     actions = {
-        1: manager.add_task,
-        2: manager.remove_task,
-        3: manager.change_status,
-        4: manager.change_priority,
-        5: manager.change_description,
+        1: lambda: add_task_ui(manager),
+        2: lambda: remove_task_ui(manager),
+        3: lambda: change_status_ui(manager),
+        4: lambda: change_priority_ui(manager),
+        5: lambda: change_description_ui(manager),
         7: manager.show_task,
-        8: lambda: manager.save(json_file),
+        8: lambda: setattr(manager, "task_dict", save(manager.task_dict, json_file),),
     }
 
     # Task Manager Menu Loop
@@ -67,13 +80,29 @@ def task_manager_menu(manager: TaskManager, json_file: str) -> None:
 
             match select:
                 case 1:
-                    manager.display_tasks()
+                    tasks = manager.get_all_tasks()
+                    display_tasks(tasks)
+                    report_data = generate_report(tasks)
+                    display_report(report_data)
+
                 case 2:
-                    manager.display_only_done()
+                    tasks = manager.get_tasks_by_status("Done")
+                    display_tasks(tasks)
+                    report_data = generate_report(tasks)
+                    display_report(report_data)
+
                 case 3:
-                    manager.display_only_in_process()
+                    tasks = manager.get_tasks_by_status("In process")
+                    display_tasks(tasks)
+                    report_data = generate_report(tasks)
+                    display_report(report_data)
+
                 case 4:
-                    manager.display_only_failed()
+                    tasks = manager.get_tasks_by_status("Failed")
+                    display_tasks(tasks)
+                    report_data = generate_report(tasks)
+                    display_report(report_data)
+
                 case 5:
                     manager.sort_by_priority_and_display()
                 case _:
