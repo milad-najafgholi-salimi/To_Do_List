@@ -112,55 +112,6 @@ todo-app
 
 The application will guide you through the available options for opening an existing task file, creating a new task file, or exiting the program.
 
-## Project Structure
-
-The project is organized into separate modules based on their responsibilities:
-
-```text
-To_Do_List/
-│
-├── src/
-│   └── todo_app/
-│       ├── main.py
-│       ├── logic.py
-│       ├── storage.py
-│       └── ui.py
-│
-├── pyproject.toml
-└── README.md
-```
-
-### `main.py`
-
-Handles the main application flow and menu navigation.
-
-### `logic.py`
-
-Contains the core application logic, including:
-
-* Task creation
-* Task modification
-* Task deletion
-* Task selection
-* Task filtering
-* Task sorting
-* Progress reports
-* Weighted grading
-
-### `storage.py`
-
-Handles JSON file operations, including:
-
-* Opening existing JSON files
-* Creating new JSON files
-* Reading task data
-* Writing task data
-* Handling invalid or empty JSON files
-
-### `ui.py`
-
-Contains reusable user interface utilities, including the `print_menu()` function used to generate consistent menu headers and option lists.
-
 ## Why This Project?
 
 I built this project to solve an actual need I had while improving my programming skills.
@@ -186,62 +137,6 @@ Working on this project helped me:
 * Build a complete CLI application from scratch.
 
 * Improve code readability and reduce duplicated code through refactoring.
-
-## Key Technical Features
-
-### Object-Oriented Programming
-
-The application uses classes to organize task-related data and operations.
-
-The `Task` class is responsible for representing individual tasks, while the `TaskManager` class handles task management operations.
-
-### Weighted Priority System
-
-Each task receives a weight based on its priority:
-
-```text
-High   → 3
-Medium → 2
-Low    → 1
-```
-
-This allows the application to calculate progress based not only on the number of completed tasks, but also on the importance of those tasks.
-
-### UUID Generation
-
-Each task receives a unique UUID when it is created.
-
-This allows users to select and manage specific tasks without relying on list indexes.
-
-### JSON Persistence
-
-Task data is stored in human-readable JSON files, allowing the data to remain available between application sessions.
-
-### Report Generation
-
-The application generates statistics about task progress and saves the report in a separate JSON file.
-
-The report includes both regular completion percentages and weighted completion percentages.
-
-### Sorting and Filtering
-
-Tasks can be filtered by status and sorted by status and priority.
-
-The sorting system groups tasks by status and then orders them by priority:
-
-```text
-Status
-└── Priority
-    ├── High
-    ├── Medium
-    └── Low
-```
-
-### Reusable UI Utilities
-
-The `print_menu()` function provides a consistent visual structure for menus throughout the application.
-
-This reduces duplicated formatting code and makes the CLI interface easier to maintain.
 
 ## 🤝 Contributing
 
