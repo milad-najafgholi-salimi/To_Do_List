@@ -14,10 +14,11 @@ The application supports priority levels, status tracking, UUID-based task selec
 
 * **View tasks** — display all tasks or view a specific task using its UUID.
 
-* **Priority levels** — assign one of three priority levels: `High`, `Medium`, or `Low`.
+* **Priority levels** — assign one of three priority levels: `Extremelly Important`, `High`, `Medium`, or `Low`.
 
 * **Weighted priority system** — each priority level has a different weight:
 
+  * `Extremelly Important` → 4
   * `High` → 3
   * `Medium` → 2
   * `Low` → 1

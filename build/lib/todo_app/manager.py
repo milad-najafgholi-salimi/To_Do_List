@@ -115,23 +115,19 @@ class TaskManager:
         display_report(report_data)
 
     def sort_priority(self, task_list: list) -> list:
-        extremelly_important_list = []
         high_list = []
         medium_list = []
         low_list = []
 
         for task in task_list:
-            if task["Priority"] == "Extremelly Important":
-                extremelly_important_list.append(task)
-            elif task["Priority"] == "High":
+            if task["Priority"] == "High":
                 high_list.append(task)
             elif task["Priority"] == "Medium":
                 medium_list.append(task)
             elif task["Priority"] == "Low":
                 low_list.append(task)
 
-        # extend lists into a list 
-        return extremelly_important_list + high_list + medium_list + low_list
+        return high_list + medium_list + low_list # extend lists into a list 
     
     def exit_menu(self, json_file) -> bool:
         from .save import save
